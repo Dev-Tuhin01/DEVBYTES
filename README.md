@@ -2,7 +2,7 @@
 
 ### Made for : Aradhana 
 
-Live:  (Website)[https://www.youtube.com/watch?v=E4WlUXrJgy4]
+Live:  [GitHub](https://www.youtube.com/watch?v=E4WlUXrJgy4)
 
 ---
 
@@ -15,7 +15,6 @@ Live:  (Website)[https://www.youtube.com/watch?v=E4WlUXrJgy4]
 - [ ] Authentication
 - [ ] Blog Posts CRUD
 - [ ] Comments and Likes
-- [ ] 
  
 
 ## Bonus Features Implemented
