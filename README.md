@@ -9,7 +9,8 @@ Live:  [GitHub](https://www.youtube.com/watch?v=E4WlUXrJgy4)
 ## Tech Stack Choices
 - Frontend: React, Shad/CN
 - Backend: NodeJS, ExpressJS, JWT
-- Database: 
+- Database: MongoDB
+- AI: 
 
 ## Features Completed
 - [ ] Authentication
