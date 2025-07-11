@@ -10,7 +10,9 @@ export const register = async (req:Request, res:Response) => {
     if(!userName || !email || !password) {
       console.log("Didn't recieved all inputs",req.body);
       res.status(400).json({
-        error:"All inputs are not recieved properly"
+        success:false,
+        message: "Missing Inputs",
+        error:"All inputs are not recieved properly" 
       })
     }
 
@@ -18,7 +20,9 @@ export const register = async (req:Request, res:Response) => {
     
     if (existingUser) {
       res.status(409).json({
-        error:"User already exists"
+        success:false,
+        message:"User already exists",
+        error:"User name conflict in Database"
       });
     }
     
@@ -35,6 +39,8 @@ export const register = async (req:Request, res:Response) => {
     const token = generateJWToken(user._id as string);
 
     res.status(201).json({
+      success:true,
+      message:"Successfully registered",
       user: {
         ...user.toObject(),
         password:undefined
@@ -45,7 +51,9 @@ export const register = async (req:Request, res:Response) => {
   } catch (error) {
       console.error("Internal Server Error: ",(error as Error).message);
       res.status(500).json({
-        error:"Something went wrong in the server"
+        success:false,
+        message:"Something went wrong in the server",
+        error:(error as Error).message
       });
   }
   
@@ -60,7 +68,9 @@ export const login = async (req:Request,res:Response)=>{
   
     if (!user) {
       res.status(400).json({
-        error:"Invalid User Name"
+        success:false,
+        message:"Invalid User Name",
+        error:"userName couldn't be found"
       });
       return ;
     }
@@ -69,7 +79,9 @@ export const login = async (req:Request,res:Response)=>{
 
     if (!isPasswordMatch) {
       res.status(400).json({
-        error:"Invalid Password"
+        success:false,
+        message:"Invalid Password",
+        error:"Password Mismatch"
       });
       return ;
     }
@@ -77,6 +89,8 @@ export const login = async (req:Request,res:Response)=>{
     const token = generateJWToken(user._id as string);
 
     res.status(200).json({
+      success:true,
+      message:"Successfully logged in",
       user: {
         ...user.toObject(),
         password:undefined
@@ -88,7 +102,9 @@ export const login = async (req:Request,res:Response)=>{
   } catch (error) {
       console.error("Internal Server Error: ",(error as Error).message);
       res.status(500).json({
-        error:"Something went wrong in the server"
+        success:false,
+        message:"Something went wrong in the server",
+        error:(error as Error).message
       });
   }
 }

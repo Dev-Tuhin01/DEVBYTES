@@ -1,10 +1,13 @@
 import express, {type Request, type Response } from "express";
 import dotenv from "dotenv";
+
+dotenv.config()
+
+
 import app from "./src/index.ts";
 import connectDB from "./src/Config/db.ts";
 
 
-dotenv.config()
 
 const port = process.env.PORT || 5001;
 
