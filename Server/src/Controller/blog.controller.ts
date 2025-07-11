@@ -2,7 +2,7 @@ import {type Request, type Response } from "express";
 import Blog from "../Model/blog.model.ts";
 import {type AuthReq } from "../Middleware/auth.middleware.ts";
 import saveImage from "../Utils/imageKitUtils.ts";
-import { ObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
 
 export const getAllBlogs = async (req:Request,res:Response) => {
   try {
@@ -166,6 +166,70 @@ export const likeBlog = async (req:AuthReq,res:Response) => {
       error:(error as Error).message
     });
  }
+}
+
+export const updateBlog = async (req:AuthReq, res:Response) => {
+  try {
+    const {blogId} = req.params
+    const {title, content,genre} = req.body;
+    const img = req.file;
+    const userId = req.user?._id as Types.ObjectId;
+
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      res.status(404).json({
+        success: false,
+        message: "No Blog found",
+        error: `No blog found with id: ${blogId}`
+      });
+  
+      return ;
+    }
+  
+    if (blog.createdBy?.toString() !== userId.toString()) {
+      res.status(403).json({
+        success: false,
+        message:"Don't have permission to delete this blog",
+        error: `Blog is created by user ${blog.createdBy} and can't be deleted by ${userId}`
+      });
+
+      return;
+    }
+
+    if (title){
+      blog.title = title;
+    }
+
+    if (genre) {
+      blog.genre = genre;
+    }
+
+    if (content) {
+      blog.content = content
+    }
+
+    if (img) {
+      const thumbnail = await saveImage(img);
+      blog.thumbnail = thumbnail;
+    }
+
+    await blog.save();
+
+    res.status(200).json({
+      success:true,
+      message: "Blog updated",
+      blog
+    })
+    
+  } catch (error) {
+    console.error("Internal Server Error: ",(error as Error).message);
+    res.status(500).json({
+      success:false,
+      message:"Something went wrong in the server",
+      error:(error as Error).message
+    });
+  }
 }
 
 
