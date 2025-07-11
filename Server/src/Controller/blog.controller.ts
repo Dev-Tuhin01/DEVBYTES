@@ -3,6 +3,7 @@ import Blog from "../Model/blog.model.ts";
 import {type AuthReq } from "../Middleware/auth.middleware.ts";
 import saveImage from "../Utils/imageKitUtils.ts";
 import { Types } from "mongoose";
+import User from "../Model/user.model.ts";
 
 export const getAllBlogs = async (req:Request,res:Response) => {
   try {
@@ -10,6 +11,7 @@ export const getAllBlogs = async (req:Request,res:Response) => {
   
     res.status(200).json({
       success:true,
+      message: "Fetched all blogs",
       blogs
     });
   } catch (error) {
@@ -19,6 +21,30 @@ export const getAllBlogs = async (req:Request,res:Response) => {
         message:"Something went wrong in the server",
         error:(error as Error).message
       });
+  }
+}
+
+export const myBlogs = async (req:AuthReq, res:Response) =>{
+  try {
+    const userId = req.user?._id as Types.ObjectId;
+    const user = await User.findById(userId);
+    console.log(user);
+
+    const blogs = await Blog.find({createdBy: userId}).populate("createdBy","userName").sort({createdAt:-1});
+
+    res.status(200).json({
+      success: true,
+      message:"Fetched all the blogs by user",
+      blogs
+    });
+    
+  } catch (error) {
+    console.error("Internal Server Error: ",(error as Error).message);
+    res.status(500).json({
+      success:false,
+      message:"Something went wrong in the server",
+      error:(error as Error).message
+    });
   }
 }
 
